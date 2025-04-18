@@ -5,7 +5,8 @@
 ---@type ChadrcConfig
 local M = {}
 
-M.ui = {
+M.base46 = {
+  transparency = true,
   theme = 'bearded-arc',
   hl_add = {
     ["@log.level.warn"] = { fg = "sun" },
