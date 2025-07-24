@@ -6,8 +6,8 @@
 local M = {}
 
 M.base46 = {
-  transparency = true,
   theme = 'bearded-arc',
+  transparency = true,
   hl_add = {
     ["@log.level.warn"] = { fg = "sun" },
     ["@log.level.error"] = { fg = "red" },

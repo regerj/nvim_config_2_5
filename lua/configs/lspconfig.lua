@@ -14,9 +14,9 @@ local function open_float()
 end
 
 -- Adds room to customize the on_attach function
-local function extended_on_attach()
+local function extended_on_attach(client)
     map("n", "<leader>lf", open_float, { desc = "LSP Open Floating Diagnostic Window"})
-    nvlsp.on_attach()
+    nvlsp.on_attach(client)
 end
 
 -- lsps with default config
@@ -37,17 +37,35 @@ lspconfig.clangd.setup {
   capabilities = nvlsp.capabilities
 }
 
-lspconfig.rust_analyzer.setup{
+-- lspconfig.rust_analyzer.setup{
+--   on_attach = extended_on_attach,
+--   capabilities = nvlsp.capabilities,
+--   filetypes = {"rust"},
+--   root_dir = lspconfig.util.root_pattern("Cargo.toml"),
+--   settings = {
+--     ["rust-analyzer"] = {
+--       cargo = {
+--         features = {
+--         }
+--       }
+--     }
+--   }
+-- }
+
+lspconfig.azure_pipelines_ls.setup {
+  cmd = { "azure-pipelines-language-server", "--stdio" },
+  root_dir = lspconfig.util.root_pattern ".pipelines/",
   on_attach = extended_on_attach,
   capabilities = nvlsp.capabilities,
-  filetypes = {"rust"},
-  root_dir = lspconfig.util.root_pattern("Cargo.toml"),
+  filetypes = {"yaml"},
   settings = {
-    ["rust-analyzer"] = {
-      cargo = {
-        features = {
-        }
-      }
-    }
-  }
+      yaml = {
+          schemas = {
+              ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/main/service-schema.json"] = {
+                  "/.pipelines/**/*.yml",
+                  "/.pipelines/*.yml",
+              },
+          },
+      },
+  },
 }
