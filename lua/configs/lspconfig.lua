@@ -21,7 +21,7 @@ end
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
-  lspconfig(lsp, { 
+  lspconfig(lsp, {
     setup = {
       on_attach = extended_on_attach,
       on_init = nvlsp.on_init,
@@ -33,13 +33,33 @@ end
 lspconfig('clangd', {
   setup = {
     on_attach = function (client, bufnr)
+      print("hello there")
       client.server_capabilities.signatureHelpProvider = false
+      map("n", "<leader>lf", vim.diagnostic.open_float({ border = "rounded" }), { desc = "LSP Open Floating Diagnostic Window"})
       nvlsp.on_attach(client, bufnr)
     end,
 
-    capabilities = nvlsp.capabilities
+    capabilities = nvlsp.capabilities,
+    on_init = nvlsp.on_init,
+    filetypes = { 'c', 'cpp', 'cuda', 'cxx', 'h', 'hpp', 'hxx' },
   }
 })
+
+lspconfig('json-lsp', {
+  cmd = {'vscode-json-language-server', '--stdio'},
+  filetypes = { 'json', 'jsonc' },
+  init_options = {
+    provideFormatter = true,
+  },
+  root_markers = { '.git' },
+})
+
+vim.lsp.enable('json-lsp')
+
+vim.lsp.enable('bashls')
+vim.lsp.enable('clangd')
+vim.lsp.enable('pyright')
+vim.lsp.enable('just')
 
 -- lspconfig.rust_analyzer.setup{
 --   on_attach = extended_on_attach,
