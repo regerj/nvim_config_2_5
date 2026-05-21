@@ -108,14 +108,17 @@ return {
           lines[#lines + 1] = line
         end
         for _,v in pairs(lines) do
-          local a, b = v:match"^raenv (%S+)=(.+)"
+          local a, b = v:match"^raenv ([^=]+)=(.+)"
           if a == nil then
             goto continue
           end
           env[a] = b
           ::continue::
         end
-        print(env)
+        for key, value in pairs(env) do
+          print("key=", key)
+          print("value=", value)
+        end
       end
 
       vim.g.rustaceanvim = {
