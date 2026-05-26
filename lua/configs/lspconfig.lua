@@ -1,7 +1,6 @@
 require("nvchad.configs.lspconfig").defaults()
 
 local servers = { "json-lsp", "bashls", "clangd", "pyright", "just" }
-vim.lsp.enable(servers)
 
 -- read :h vim.lsp.config for changing options of lsp servers 
 -- Opens a floating diagnostic window with options
@@ -12,25 +11,25 @@ end
 -- Adds room to customize the on_attach function
 local function extended_on_attach(client)
     map("n", "<leader>lf", open_float, { desc = "LSP Open Floating Diagnostic Window"})
-    nvlsp.on_attach(client)
+    on_attach(client)
 end
 
-lspconfig('clangd', {
+vim.lsp.config('clangd', {
   setup = {
     on_attach = function (client, bufnr)
       print("hello there")
       client.server_capabilities.signatureHelpProvider = false
       map("n", "<leader>lf", vim.diagnostic.open_float({ border = "rounded" }), { desc = "LSP Open Floating Diagnostic Window"})
-      nvlsp.on_attach(client, bufnr)
+      on_attach(client, bufnr)
     end,
 
-    capabilities = nvlsp.capabilities,
-    on_init = nvlsp.on_init,
+    capabilities = capabilities,
+    on_init = on_init,
     filetypes = { 'c', 'cpp', 'cuda', 'cxx', 'h', 'hpp', 'hxx' },
   }
 })
 
-lspconfig('json-lsp', {
+vim.lsp.config('json-lsp', {
   cmd = {'vscode-json-language-server', '--stdio'},
   filetypes = { 'json', 'jsonc' },
   init_options = {
@@ -54,12 +53,12 @@ lspconfig('json-lsp', {
 --   }
 -- }
 
-lspconfig('azure_pipelines_ls', {
+vim.lsp.config('azure_pipelines_ls', {
   setup = {
     cmd = { "azure-pipelines-language-server", "--stdio" },
     root_dir = ".pipelines/",
     on_attach = extended_on_attach,
-    capabilities = nvlsp.capabilities,
+    capabilities = capabilities,
     filetypes = {"yaml"},
     settings = {
         yaml = {
@@ -73,3 +72,5 @@ lspconfig('azure_pipelines_ls', {
     },
   }
 })
+
+vim.lsp.enable(servers)
